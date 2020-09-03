@@ -1124,6 +1124,50 @@
         ]
     },
     {
+        "name": "laravel-lang/lang",
+        "version": "7.0.3",
+        "version_normalized": "7.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/Laravel-Lang/lang.git",
+            "reference": "2cb9932f781415f1669ce27d29e5b86399ab164a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/Laravel-Lang/lang/zipball/2cb9932f781415f1669ce27d29e5b86399ab164a",
+            "reference": "2cb9932f781415f1669ce27d29e5b86399ab164a",
+            "shasum": ""
+        },
+        "require": {
+            "ext-json": "*"
+        },
+        "suggest": {
+            "andrey-helldar/laravel-lang-publisher": "Easy installation and update of translation files for your project",
+            "arcanedev/laravel-lang": "Translations manager and checker for Laravel 5",
+            "overtrue/laravel-lang": "Command to add languages in your project"
+        },
+        "time": "2020-08-23T08:17:21+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "caouecs",
+                "email": "caouecs@caouecs.net"
+            }
+        ],
+        "description": "Languages for Laravel",
+        "keywords": [
+            "lang",
+            "languages",
+            "laravel",
+            "lpm"
+        ]
+    },
+    {
         "name": "laravel/framework",
         "version": "v7.27.0",
         "version_normalized": "7.27.0.0",
