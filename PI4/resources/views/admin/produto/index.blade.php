@@ -70,7 +70,7 @@
                                                 <td>{{$product->id}}</td>
                                                 <td>{{$product->name}}</td>
                                                 <td> <img src="@if ( empty($product->image) ) {{asset('admin_assets/images/produto_sem_imagem.jpg')}} @else {{$product->image}} @endif" alt="Preview do produto" class='img_preview'> </td>
-                                                <td> {{ number_format(App\Product::withTrashed()->find($product->id)->produtoSaldo->sum('quantidade'),0,',','.') }} </td>
+                                                <td> {{ number_format($product->stock,0,',','.') }} </td>
                                                 <td>{{$product->price()}}</td>
                                                 <td>{{$product->descontoExibir()}}</td>
 

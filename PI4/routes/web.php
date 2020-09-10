@@ -9,8 +9,9 @@ Auth::routes();
 Route::middleware('auth', 'is_admin')->group(function()
 {
     // Index
-    Route::get('/', 'HomeController@index')->name('home');
+    Route::get('/', 'HomeController@index_home')->name('home');
     Route::get('/home', 'HomeController@index')->name('home');
+    Route::get('/admin', 'HomeController@index')->name('admin');
 
     // Usuarios
     Route::resource('Users','UsersController');
