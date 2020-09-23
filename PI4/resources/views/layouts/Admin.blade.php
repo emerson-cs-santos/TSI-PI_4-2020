@@ -58,9 +58,9 @@
 
                                     <li class="nav-item"><a href="{{route('Users.index')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['Users', 'trashed-Users'] ) ? ' current' : '' }}"><i class="fas fa-users text-light fa-lg mr-3"></i> Usuários</a></li>
 
-                                    {{-- <li class="nav-item"><a href="{{route('categories.index')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['categories', 'trashed-categories'] ) ? ' current' : '' }}"  ><i class="fa fa-cubes text-light fa-lg mr-3"></i> Categorias</a></li> --}}
+                                    <li class="nav-item"><a href="{{route('categories.index')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['categories', 'trashed-categories'] ) ? ' current' : '' }}"  ><i class="fa fa-cubes text-light fa-lg mr-3"></i> Categorias</a></li>
 
-                                    {{-- <li class="nav-item"><a href="{{route('products.index')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['products', 'trashed-product'] ) ? ' current' : '' }}"  ><i class="fa fa-shopping-bag text-light fa-lg mr-3"></i> Produtos</a></li> --}}
+                                    <li class="nav-item"><a href="{{route('products.index')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['products', 'trashed-product'] ) ? ' current' : '' }}"  ><i class="fa fa-shopping-bag text-light fa-lg mr-3"></i> Produtos</a></li>
 
                                     {{-- <li class="nav-item"><a href="{{route('carrinho.index')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['carrinho', 'trashed-carrinho'] ) ? ' current' : '' }}"><i class="fas fa-shopping-cart text-light fa-lg mr-3"></i> Carrinhos</a></li> --}}
 
