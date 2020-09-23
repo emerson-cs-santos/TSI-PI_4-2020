@@ -18,6 +18,6 @@ class HomeController extends Controller
 
     public function visitante()
     {
-        return view('welcome');
+        return view('semAcesso');
     }
 }

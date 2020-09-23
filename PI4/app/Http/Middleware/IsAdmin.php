@@ -21,6 +21,7 @@ class IsAdmin
         }
 
         return redirect('login');
+        //return redirect('logout');
 
 
         // função logout não funciona mais no laravel 8:
