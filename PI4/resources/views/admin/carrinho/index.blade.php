@@ -105,10 +105,36 @@
                                 {{-- Tabela fim --}}
 
                                 <!---Pagination-->
-                                <div class="pagination justify-content-center">
-                                    {{ $carrinhos->links() }}
+                                <div class="pagination justify-content-center mt-3">
+                                   
+                                    @if ($carrinhos->hasPages())
+                                        <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
+                                            {{-- Previous Page Link --}}
+                                            @if ($carrinhos->onFirstPage())
+                                                <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">
+                                                    {!! __('pagination.previous') !!}
+                                                </span>
+                                            @else
+                                                <a href="{{ $carrinhos->previousPageUrl() }}" rel="prev" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
+                                                    {!! __('pagination.previous') !!}
+                                                </a>
+                                            @endif
+                                    
+                                            {{-- Next Page Link --}}
+                                            @if ($carrinhos->hasMorePages())
+                                                <a href="{{ $carrinhos->nextPageUrl() }}" rel="next" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
+                                                    {!! __('pagination.next') !!}
+                                                </a>
+                                            @else
+                                                <span class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">
+                                                    {!! __('pagination.next') !!}
+                                                </span>
+                                            @endif
+                                        </nav>
+                                    @endif
+
                                 </div>
-                                <!---End of Pagination-->
+                                <!---End of Pagination-->                                 
 
                                 @if( Request::path() !== 'trashed-carrinho' )
                                     <a href="{{ route('trashed-carrinho.index') }}" class="btn btn-xs btn-info" data-placement="top" data-toggle="tooltip" title="Acessar registros excluídos">Lixeira</a>
