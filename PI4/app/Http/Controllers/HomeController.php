@@ -20,4 +20,9 @@ class HomeController extends Controller
     {
         return view('semAcesso');
     }
+
+    public function sobre()
+    {
+        return view('sobre');
+    }
 }

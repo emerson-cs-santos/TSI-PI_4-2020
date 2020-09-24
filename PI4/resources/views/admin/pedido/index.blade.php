@@ -66,7 +66,7 @@
                                             @foreach($pedidos as $pedido)
                                                 <tr>
                                                     <td>{{$pedido->id}}</td>
-                                                    <td> @if ( $pedido->user_id > 0 ) {{App\Pedido::withTrashed()->find($pedido->id)->usuario->name}} @else Sem usuário @endif</td>
+                                                    <td> @if ( $pedido->user_id > 0 ) {{App\Models\Pedido::withTrashed()->find($pedido->id)->usuario->name}} @else Sem usuário @endif</td>
                                                     @php
                                                         $date = DateTime::createFromFormat('Y-m-d H:i:s', $pedido->created_at );
                                                     @endphp
@@ -107,7 +107,7 @@
 
                                 <!---Pagination-->
                                 <div class="pagination justify-content-center mt-3">
-                                   
+
                                     @if ($pedidos->hasPages())
                                         <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
                                             {{-- Previous Page Link --}}
@@ -120,7 +120,7 @@
                                                     {!! __('pagination.previous') !!}
                                                 </a>
                                             @endif
-                                    
+
                                             {{-- Next Page Link --}}
                                             @if ($pedidos->hasMorePages())
                                                 <a href="{{ $pedidos->nextPageUrl() }}" rel="next" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
@@ -135,7 +135,7 @@
                                     @endif
 
                                 </div>
-                                <!---End of Pagination-->                                 
+                                <!---End of Pagination-->
 
                                 @if( Request::path() !== 'trashed-pedido' )
                                     <a href="{{ route('trashed-pedido.index') }}" class="btn btn-xs btn-info" data-placement="top" data-toggle="tooltip" title="Acessar pedidos cancelados">Pedidos cancelados</a>

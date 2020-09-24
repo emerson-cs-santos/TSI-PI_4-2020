@@ -66,9 +66,9 @@
                                             @foreach($carrinhos as $carrinho)
                                             <tr>
                                                 <td>{{$carrinho->id}}</td>
-                                                <td> @if ( $carrinho->product_id > 0 ) {{App\Carrinho::withTrashed()->find($carrinho->id)->produto->name}} @else Sem produto @endif</td>
+                                                <td> @if ( $carrinho->product_id > 0 ) {{App\Models\Carrinho::withTrashed()->find($carrinho->id)->produto->name}} @else Sem produto @endif</td>
                                                 <td>{{number_format($carrinho->quantidade,0,',','.')}}</td>
-                                                <td> @if ( $carrinho->user_id > 0 ) {{App\Carrinho::withTrashed()->find($carrinho->id)->usuario->name}} @else Sem usuário @endif</td>
+                                                <td> @if ( $carrinho->user_id > 0 ) {{App\Models\Carrinho::withTrashed()->find($carrinho->id)->usuario->name}} @else Sem usuário @endif</td>
 
                                                 @if(!$carrinho->trashed())
                                                     <td>
@@ -106,7 +106,7 @@
 
                                 <!---Pagination-->
                                 <div class="pagination justify-content-center mt-3">
-                                   
+
                                     @if ($carrinhos->hasPages())
                                         <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
                                             {{-- Previous Page Link --}}
@@ -119,7 +119,7 @@
                                                     {!! __('pagination.previous') !!}
                                                 </a>
                                             @endif
-                                    
+
                                             {{-- Next Page Link --}}
                                             @if ($carrinhos->hasMorePages())
                                                 <a href="{{ $carrinhos->nextPageUrl() }}" rel="next" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
@@ -134,7 +134,7 @@
                                     @endif
 
                                 </div>
-                                <!---End of Pagination-->                                 
+                                <!---End of Pagination-->
 
                                 @if( Request::path() !== 'trashed-carrinho' )
                                     <a href="{{ route('trashed-carrinho.index') }}" class="btn btn-xs btn-info" data-placement="top" data-toggle="tooltip" title="Acessar registros excluídos">Lixeira</a>

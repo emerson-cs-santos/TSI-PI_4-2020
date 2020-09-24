@@ -62,11 +62,11 @@
 
                                     <li class="nav-item"><a href="{{route('products.index')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['products', 'trashed-product'] ) ? ' current' : '' }}"  ><i class="fa fa-shopping-bag text-light fa-lg mr-3"></i> Produtos</a></li>
 
-                                    {{-- <li class="nav-item"><a href="{{route('carrinho.index')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['carrinho', 'trashed-carrinho'] ) ? ' current' : '' }}"><i class="fas fa-shopping-cart text-light fa-lg mr-3"></i> Carrinhos</a></li> --}}
+                                    <li class="nav-item"><a href="{{route('carrinho.index')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['carrinho', 'trashed-carrinho'] ) ? ' current' : '' }}"><i class="fas fa-shopping-cart text-light fa-lg mr-3"></i> Carrinhos</a></li>
 
-                                    {{-- <li class="nav-item"><a href="{{route('index-pedido')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['pedido', 'trashed-pedido', 'item-pedido'] ) ? ' current' : '' }}"><i class="fas fa-truck-moving text-light fa-lg mr-3"></i> Pedidos</a></li> --}}
+                                    <li class="nav-item"><a href="{{route('index-pedido')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['pedido', 'trashed-pedido', 'item-pedido'] ) ? ' current' : '' }}"><i class="fas fa-truck-moving text-light fa-lg mr-3"></i> Pedidos</a></li>
 
-                                    {{-- <li class="nav-item"><a href="{{route('sobre-index')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['sobre-index', 'sobre-quem-somos', 'sobre-contato'] ) ? ' current' : '' }}"><i class="fa fa-file-alt text-light fa-lg mr-3"></i> Sobre a loja</a></li> --}}
+                                    <li class="nav-item"><a href="{{route('sobre')}}" class="nav-link text-white p-3 mb-2 sidebar-link {{ Str::of( Request::path() )->contains( ['sobre'] ) ? ' current' : '' }}"><i class="fa fa-file-alt text-light fa-lg mr-3"></i> Sobre </a></li>
 
                                 </ul>
                             </div>
