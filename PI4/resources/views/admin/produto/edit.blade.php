@@ -58,6 +58,11 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label>Estoque*</label>
+                                        <input type="text" class='form-control' id="EstoqueEdit" name="stock" maxlength="9" autofocus required placeholder="Digite a quantidade" value="{{$product->stock}}">
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="home">Aparecer na Home?</label>
                                         <select name="home" class="form-control" id="home" >
                                             <option value="N" @if( $product->home == 'N') selected @endif >Não</option>
@@ -73,8 +78,6 @@
                                             <img id="ExibirIMG_inputfile" class="form-control img_extra_small_prod img_small_prod img_normal_prod img_grande_prod" alt="Imagem do Produto" src=" @if( empty($product->image) )  {{asset('admin_assets/images/produto_sem_imagem.jpg')}} @else {{$product->image}} @endif" >
                                             <figcaption>Imagem do produto</figcaption>
                                         </figure>
-
-
                                     </div>
 
                                     <button type="submit" class="btn btn-warning mt-3">Salvar</button>
@@ -97,6 +100,7 @@
         {
             $('#produtoPreco_edit').mask("#.##0,00", {reverse: true});
             $('#produtoDesconto_edit').mask("#.##0,00", {reverse: true});
+            $('#EstoqueEdit').mask("#.##0", {reverse: true});
         })
 
     </script>

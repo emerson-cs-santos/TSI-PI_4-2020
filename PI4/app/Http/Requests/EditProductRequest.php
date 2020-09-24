@@ -20,6 +20,7 @@ class EditProductRequest extends FormRequest
             ,'preco'        => 'required|max:10'
             ,'discount'     => 'max:5'
             ,'category_id'  => 'required'
+            ,'stock'        => 'required'
         ];
     }
 }

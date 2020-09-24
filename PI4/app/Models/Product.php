@@ -17,6 +17,7 @@ class Product extends Model
         ,'price'
         ,'discount'
         ,'category_id'
+        ,'stock'
         ,'home'
     ];
 
@@ -43,5 +44,5 @@ class Product extends Model
      public function descontoExibir()
      {
          return number_format($this->discount, 2) . '%';
-     }    
+     }
 }

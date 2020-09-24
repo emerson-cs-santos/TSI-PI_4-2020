@@ -38,12 +38,22 @@
 
                                     <div class="form-group">
                                         <label>Preço (R$)</label>
-                                        <input type="text" class='form-control' id='produtoPreco_show' name="price" maxlength="10" placeholder="Digite o preço" value="{{$product->price}}">
+                                        <input type="text" class='form-control' id='produtoPreco_show' name="price" maxlength="10" placeholder="" value="{{$product->price}}">
                                     </div>
 
                                     <div class="form-group">
                                         <label>Desconto (%)</label>
-                                        <input type="text" class='form-control' id='produtoDesconto_show' name="discount" maxlength="5" placeholder="Digite o desconto" value="{{$product->discount}}">
+                                        <input type="text" class='form-control' id='produtoDesconto_show' name="discount" maxlength="5" placeholder="" value="{{$product->discount}}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Estoque</label>
+                                        <input type="text" class='form-control' id="EstoqueShow" name="stock" maxlength="9" placeholder="" value="{{$product->stock}}">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label>Vendido</label>
+                                        <input type="text" class='form-control' id="VendidoShow" name="sold" maxlength="9" placeholder="" value="{{$product->sold}}">
                                     </div>
 
                                     <div class="form-group">
@@ -99,6 +109,8 @@
         {
             $('#produtoPreco_show').mask("#.##0,00", {reverse: true});
             $('#produtoDesconto_show').mask("#.##0,00", {reverse: true});
+            $('#EstoqueShow').mask("#.##0", {reverse: true});
+            $('#VendidoShow').mask("#.##0", {reverse: true});
         })
 
     </script>

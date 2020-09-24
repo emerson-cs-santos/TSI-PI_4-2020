@@ -55,6 +55,11 @@
                                     </div>
 
                                     <div class="form-group">
+                                        <label>Estoque*</label>
+                                        <input type="text" class='form-control' id="EstoqueCreate" name="stock" maxlength="9" autofocus required placeholder="Digite a quantidade" value="{{old('stock')}}">
+                                    </div>
+
+                                    <div class="form-group">
                                         <label for="home">Aparecer na Home?</label>
                                         <select name="home" class="form-control" id="home" >
                                             <option value="N" @if( old('home') == 'N') selected @endif >Não</option>
@@ -92,6 +97,7 @@
         {
         $('#produtoPreco_create').mask("#.##0,00", {reverse: true});
         $('#produtoDesconto_create').mask("#.##0,00", {reverse: true});
+        $('#EstoqueCreate').mask("#.##0", {reverse: true});
         })
 
     </script>

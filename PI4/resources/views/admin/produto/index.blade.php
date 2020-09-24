@@ -57,6 +57,7 @@
                                                 <th>Nome</th>
                                                 <th>Preview</th>
                                                 <th>Estoque</th>
+                                                <th>Vendido</th>
                                                 <th>Preço</th>
                                                 <th>Desconto</th>
                                                 @if( count($products) > 0 )
@@ -71,6 +72,7 @@
                                                 <td>{{$product->name}}</td>
                                                 <td> <img src="@if ( empty($product->image) ) {{asset('admin_assets/images/produto_sem_imagem.jpg')}} @else {{$product->image}} @endif" alt="Preview do produto" class='img_preview'> </td>
                                                 <td> {{ number_format($product->stock,0,',','.') }} </td>
+                                                <td> {{ number_format($product->sold,0,',','.') }} </td>
                                                 <td>{{$product->price()}}</td>
                                                 <td>{{$product->descontoExibir()}}</td>
 
@@ -110,7 +112,7 @@
 
                                 <!---Pagination-->
                                 <div class="pagination justify-content-center mt-3">
-                                   
+
                                     @if ($products->hasPages())
                                         <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
                                             {{-- Previous Page Link --}}
@@ -123,7 +125,7 @@
                                                     {!! __('pagination.previous') !!}
                                                 </a>
                                             @endif
-                                    
+
                                             {{-- Next Page Link --}}
                                             @if ($products->hasMorePages())
                                                 <a href="{{ $products->nextPageUrl() }}" rel="next" class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
@@ -138,7 +140,7 @@
                                     @endif
 
                                 </div>
-                                <!---End of Pagination-->                                  
+                                <!---End of Pagination-->
 
                                 @if( Request::path() == 'trashed-product' )
                                     <a href="{{route('products.index')}}" class='btn btn-info'>Voltar ao cadastro</a>

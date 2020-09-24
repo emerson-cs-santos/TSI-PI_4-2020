@@ -58,6 +58,16 @@ class ProductsController extends Controller
 
         $desconto = str_replace(',','.',$desconto);
 
+
+        // Banco de dados não aceita nulo
+        $estoque = $request->stock;
+
+        if ($estoque<=0 || $estoque == null)
+        {
+            $estoque = 0;
+        }
+        $estoque = str_replace('.','',$estoque);
+
         Product::create([
             'name'          => $request->name
             ,'image'        => $imagem_convertida
@@ -65,6 +75,7 @@ class ProductsController extends Controller
             ,'price'        => $preco
             ,'discount'     => $desconto
             ,'category_id'  => $request->category_id
+            ,'stock'        => $estoque
             ,'home'         => $request->home
         ]);
 
@@ -111,8 +122,17 @@ class ProductsController extends Controller
         {
             $desconto = 0;
         }
-
         $desconto = str_replace(',','.',$desconto);
+
+
+        // Banco de dados não aceita nulo
+        $estoque = $request->stock;
+
+        if ($estoque<=0 || $estoque == null)
+        {
+            $estoque = 0;
+        }
+        $estoque = str_replace('.','',$estoque);
 
         $product->update([
             'name'          => $request->name
@@ -120,6 +140,7 @@ class ProductsController extends Controller
             ,'price'        => $preco
             ,'discount'     => $desconto
             ,'category_id'  => $request->category_id
+            ,'stock'        => $estoque
             ,'home'         => $request->home
         ]);
 
