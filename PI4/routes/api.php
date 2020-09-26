@@ -33,3 +33,50 @@ Route::get( '/lancamentos', [APIController::class, 'lancamentos'] );
 
 // Retorna os mais vendidos
 Route::get( '/mais_vendidos', [APIController::class, 'maisVendidos'] );
+
+// Busca de jogos ou categorias
+Route::get( 'busca/{buscar}', [APIController::class, 'busca'] );
+
+// Retorna todos os produtos
+Route::get( 'produtos', [APIController::class, 'produtos'] );
+
+// Retorna informações de 1 produto
+Route::get( 'produto/{id}', [APIController::class, 'verProduto'] );
+
+// Criar usuário
+Route::post( '/registrar_usuario', [APIController::class, 'registrar'] );
+
+// Retorna informações do usuario
+Route::get( 'usuario/{id}', [APIController::class, 'verUsuario'] );
+
+// Editar usuário
+Route::put( '/atualizar_usuario/{id}', [APIController::class, 'atualizarUsuario'] );
+
+// Editar senha
+Route::put( '/atualizar_senha/{id}', [APIController::class, 'atualizarSenha'] );
+
+// Login
+Route::post( '/loginAPI', [APIController::class, 'login'] );
+
+// Carrinho - Retorna itens do carrinho
+Route::get( '/carrinho/{idUser}', [APIController::class, 'carrinho'] );
+
+// Carrinho - Incluir item
+Route::post( '/carrinho_incluir', [APIController::class, 'carrinhoIncluir'] );
+
+
+
+// Ainda falta:
+
+// Carrinho - Remover item
+Route::delete( '/carrinho_remover/{produtoID}', [APIController::class, 'carrinhoRemover'] );
+
+// Carrinho finalizar e gerar pedido
+Route::post( '/carrinho_finalizar/{idUser}', [APIController::class, 'carrinhoFinalizar'] );
+
+// Retornar Pedidos do usuário
+Route::get( '/pedidos/{idUser}', [APIController::class, 'pedidos'] );
+
+// Retornar itens do pedido
+Route::get( '/pedidos_itens/{idPedido}', [APIController::class, 'pedidosItens'] );
+
