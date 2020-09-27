@@ -6,10 +6,13 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Carrinho;
+use App\Models\Pedido;
+use App\Models\ItemPedido;
 use Illuminate\Support\Facades\Hash;
 
 class APIController extends Controller
 {
+
     public function telaInicial()
     {
         $categorias     = Category::all()->sortByDesc('id')->take(3);
@@ -30,12 +33,14 @@ class APIController extends Controller
        // $carrossel      = Product::all()->where('home','S');
     }
 
+
     public function categorias()
     {
         $categorias = Category::all()->sortByDesc('id');
 
         return response()->json( $categorias );
     }
+
 
     // Produtos da categoria
     public function categoriaProdutos( $id_categoria )
@@ -45,6 +50,7 @@ class APIController extends Controller
         return response()->json( $produtos );
     }
 
+
     public function lancamentos()
     {
         $lancamentos    = Product::all()->sortByDesc('id');
@@ -52,12 +58,14 @@ class APIController extends Controller
         return response()->json( $lancamentos );
     }
 
+
     public function maisVendidos()
     {
         $maisVendidos   = Product::all()->sortByDesc('sold');
 
         return response()->json( $maisVendidos );
     }
+
 
     public function busca( $buscar )
     {
@@ -82,6 +90,7 @@ class APIController extends Controller
         return response()->json( $products );
     }
 
+
     public function produtos( )
     {
         $products = Product::selectRaw('products.*')
@@ -91,12 +100,14 @@ class APIController extends Controller
         return response()->json( $products );
     }
 
+
     public function verProduto( $idProduto )
     {
         $produto = Product::find( $idProduto );
 
         return response()->json( $produto );
     }
+
 
     public function registrar(Request $request)
     {
@@ -170,6 +181,7 @@ class APIController extends Controller
         return response()->json( $retorno );
     }
 
+
     public function verUsuario( $idUsuario )
     {
         $usuario = User::selectRaw('users.name, users.email')
@@ -178,6 +190,7 @@ class APIController extends Controller
 
         return response()->json( $usuario );
     }
+
 
     public function atualizarUsuario( Request $request, $id )
     {
@@ -317,6 +330,7 @@ class APIController extends Controller
         return response()->json( $retorno );
     }
 
+
     public function carrinho( $idUser )
     {
         $retorno = "ok";
@@ -334,10 +348,13 @@ class APIController extends Controller
             ->groupBy('carrinhos.product_id','products.name')
             ->orderBy('products.name')
             ->get();
+
+            return response()->json( $itens );
         }
 
-        return response()->json( $itens );
+        return response()->json( $retorno );
     }
+
 
     public function carrinhoIncluir(Request $request)
     {
@@ -379,6 +396,206 @@ class APIController extends Controller
         }
 
         // Retorno do que foi feito
+        return response()->json( $retorno );
+    }
+
+
+    public function carrinhoRemover( Request $request, $idUser )
+    {
+        $produtoID = $request->produto_id;
+
+        $retorno   = "ok";
+
+        if ( is_null( User::find( $idUser ) ) )
+        {
+            $retorno = "Usuario nao encontrado";
+        }
+
+        if ( is_null( Product::find( $produtoID ) ) )
+        {
+            $retorno = "Produto nao encontrado";
+        }
+
+        // Verificar se produto existe no carrinho
+        $carrinhoProdutos = Carrinho::all()
+        ->where('user_id', '=' , $idUser)
+        ->where('product_id', $produtoID);
+
+        if ( count($carrinhoProdutos) == 0 )
+        {
+            $retorno = "Produto nao encontrado no carrinho desse usuario";
+        }
+
+        //  // Deletando todos os registros desse produto do carrinho desse usuario se não foi encontrado problemas
+        if ( $retorno == 'ok' )
+        {
+            $Itens = Carrinho::withTrashed()
+                ->where('user_id', $idUser )
+                ->where('product_id', $produtoID)
+                ->get();
+
+            foreach ($Itens as $item)
+            {
+                $item->forceDelete();
+            }
+        }
+
+        // Retorno do que foi feito
+        return response()->json( $retorno );
+    }
+
+
+    public function carrinhoFinalizar( $idUser )
+    {
+        $retorno = "ok";
+
+        if ( is_null( User::find( $idUser ) ) )
+        {
+            $retorno = "Usuario nao encontrado";
+        }
+
+        // Verificando se existe produtos no carrinho do usuario
+        $carrinhoQtd = Carrinho::all()->where('user_id', '=', $idUser )->count();
+
+        if ( $carrinhoQtd == 0 )
+        {
+            $retorno = "Nao ha produtos no carrinho desse usuario";
+        }
+
+        // Checar o estoque de cada produto no carrinho, essa select agrupa e soma a qtd dos mesmos produtos
+        $Itens = Carrinho::selectRaw('carrinhos.product_id, sum(carrinhos.quantidade) as quantidade')
+        ->where('user_id', '=', $idUser )
+        ->groupBy('carrinhos.product_id')
+        ->get();
+
+        // Checar estoque de cada produto
+        foreach ($Itens as $item)
+        {
+            $produtoID    = $item->product_id;
+
+            if ( is_null( Product::find( $produtoID ) ) )
+            {
+                $retorno = "Produto de ID $produtoID nao foi encontrado no sistema";
+            }
+
+            $produtoNome    = Product::find( $produtoID )->name;
+            $estoqueAtual   = Product::find( $produtoID )->stock;
+            $quantidade     = $item->quantidade;
+
+            if ( $quantidade > $estoqueAtual )
+            {
+                $retorno = "Produto ID $produtoID nao possui estoque disponivel!";
+            }
+        }
+
+        // Se não foi encontrado problemas, gerar pedido e remover itens do carrinho
+        if ( $retorno == 'ok' )
+        {
+            // Gerar pedido
+            $pedido = Pedido::create([ 'user_id' => $idUser ]);
+
+            // Gerar itens do pedido
+            foreach ($Itens as $item)
+            {
+                $produto = Product::find( $item->product_id );
+
+                // Gerar item do pedido de venda
+                ItemPedido::create([
+                    'fk_pedido'    => $pedido->id
+                    ,'product_id'  => $produto->id
+                    ,'quantidade'  => $item->quantidade
+                    ,'preco'       => $produto->price
+                ]);
+
+                // Atualizando quantidade vendida do produto
+                $produto->sold = $produto->sold + $item->quantidade;
+                $produto->stock = $produto->stock - $item->quantidade;
+                $produto->save();
+            }
+
+            // Deletar itens do carrinho do usuário
+            $ItensApagar = Carrinho::withTrashed()
+                ->where('user_id', $idUser )
+                ->get();
+
+            foreach ($ItensApagar as $itemApagar)
+            {
+                $itemApagar->forceDelete();
+            }
+
+            $pedido = $pedido->id;
+            $retorno = "Numero do pedido gerado: $pedido";
+        }
+
+        return response()->json( $retorno );
+    }
+
+    public function pedidos( $idUser )
+    {
+        $retorno = "ok";
+
+        if ( is_null( User::find( $idUser ) ) )
+        {
+            $retorno = "Usuario nao encontrado";
+        }
+
+        if ( $retorno == 'ok' )
+        {
+            $pedido = Pedido::withTrashed()->selectRaw('pedidos.*')
+            ->where('user_id', '=', $idUser )
+            ->orderByDesc('pedidos.id')
+            ->get();
+            return response()->json( $pedido );
+        }
+
+        return response()->json( $retorno );
+    }
+
+    public function pedidoValorTotal( $idPedido )
+    {
+        $retorno = "ok";
+
+        $pedido = Pedido::withTrashed( $idPedido ) ;
+
+        if ( is_null( $pedido  ) )
+        {
+            $retorno = "Pedido nao encontrado";
+        }
+
+        if ( $retorno == 'ok' )
+        {
+            $valores = ItemPedido::selectRaw('sum(item_pedidos.quantidade * item_pedidos.preco) as total')
+            ->where('fk_pedido', '=', $idPedido)
+            ->groupBy('fk_pedido')
+            ->get();
+
+            $valorTotal = '0';
+            foreach ($valores as $valor) // Sempre vai retornar apenas 1 registro (cada pedido só tem 1 valor total), mas é preciso fazer um foreach para acessar o valor
+            {
+                 $valorTotal = floatval($valor->total);
+            }
+            $retorno = 'R$'.number_format($valorTotal, 2,',','.');
+        }
+
+        return response()->json( $retorno );
+    }
+
+    public function pedidosItens( $idPedido )
+    {
+        $retorno = "ok";
+
+        $pedido = Pedido::withTrashed( $idPedido ) ;
+
+        if ( is_null( $pedido  ) )
+        {
+            $retorno = "Pedido nao encontrado";
+        }
+
+        if ( $retorno == 'ok' )
+        {
+            $retorno = ItemPedido::selectRaw('item_pedidos.*')->where('fk_pedido', '=', $idPedido)->orderByDesc('id')->get();
+        }
+
         return response()->json( $retorno );
     }
 }

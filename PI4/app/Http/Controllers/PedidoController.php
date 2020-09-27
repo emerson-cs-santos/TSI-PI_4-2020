@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Pedido;
+use App\Models\Product;
 use App\Models\ItemPedido;
 
 class PedidoController extends Controller
@@ -32,17 +33,16 @@ class PedidoController extends Controller
         }
         else
         {
-            // $Itens = ItemPedido::all()->where('fk_pedido',$id);
+            $Itens = ItemPedido::all()->where('fk_pedido',$id);
 
-            // foreach ($Itens as $item)
-            // {
-            //     Movimento::create([
-            //         'tipo'          => 'E'
-            //         ,'quantidade'   => $item->quantidade
-            //         ,'fk_origem'    => $pedido->id
-            //         ,'product_id'   => $item->product_id
-            //     ]);
-            // }
+            foreach ($Itens as $item)
+            {
+                $produto = Product::find( $item->product_id );
+                $produto->stock = $produto->stock + $item->quantidade;
+                $produto->sold  = $produto->sold - $item->quantidade;
+
+                $produto->save();
+            }
 
             $pedido->delete();
             session()->flash('success', "Pedido Nro $id cancelado com sucesso!");

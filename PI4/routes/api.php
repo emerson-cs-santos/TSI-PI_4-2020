@@ -64,19 +64,17 @@ Route::get( '/carrinho/{idUser}', [APIController::class, 'carrinho'] );
 // Carrinho - Incluir item
 Route::post( '/carrinho_incluir', [APIController::class, 'carrinhoIncluir'] );
 
-
-
-// Ainda falta:
-
 // Carrinho - Remover item
-Route::delete( '/carrinho_remover/{produtoID}', [APIController::class, 'carrinhoRemover'] );
+Route::delete( '/carrinho_remover/{idUser}', [APIController::class, 'carrinhoRemover'] );
 
 // Carrinho finalizar e gerar pedido
-Route::post( '/carrinho_finalizar/{idUser}', [APIController::class, 'carrinhoFinalizar'] );
+Route::get( '/carrinho_finalizar/{idUser}', [APIController::class, 'carrinhoFinalizar'] );
 
 // Retornar Pedidos do usuário
 Route::get( '/pedidos/{idUser}', [APIController::class, 'pedidos'] );
 
+// Retornar Valor total do pedido
+Route::get( '/pedido_valor_total/{idPedido}', [APIController::class, 'pedidoValorTotal'] );
+
 // Retornar itens do pedido
 Route::get( '/pedidos_itens/{idPedido}', [APIController::class, 'pedidosItens'] );
-
