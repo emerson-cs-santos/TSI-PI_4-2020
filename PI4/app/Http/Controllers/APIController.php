@@ -9,9 +9,12 @@ use App\Models\Carrinho;
 use App\Models\Pedido;
 use App\Models\ItemPedido;
 use Illuminate\Support\Facades\Hash;
+use phpDocumentor\Reflection\Types\Boolean;
+use ReallySimpleJWT\Token;
 
 class APIController extends Controller
 {
+    private $secretToken = 'sec!ReT423*&';
 
     public function telaInicial()
     {
@@ -164,6 +167,10 @@ class APIController extends Controller
             $retorno = "Senhas diferentes!";
         }
 
+        $status = true;
+        $message = "Usuario criado";
+        $statusHttp = 200;
+
         // Gravando usuário se não foi encontrado problemas
         if ( $retorno == 'ok' )
         {
@@ -176,9 +183,14 @@ class APIController extends Controller
                 ,'type'     => $nivel_acesso
             ]);
         }
+        else
+        {
+            $status = false;
+            $message = $retorno;
+            $statusHttp = 401;
+        }
 
-        // Retorno do que foi feito
-        return response()->json( $retorno );
+        return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
     }
 
 
@@ -245,6 +257,10 @@ class APIController extends Controller
 
         }
 
+        $status = true;
+        $message = "Usuario atualizado";
+        $statusHttp = 200;
+
         // Gravando atualizações do usuário se não foi encontrado problemas
         if ( $retorno == 'ok' )
         {
@@ -253,9 +269,14 @@ class APIController extends Controller
 
             $userAtualizar->save();
         }
+        else
+        {
+            $status = false;
+            $message = $retorno;
+            $statusHttp = 401;
+        }
 
-        // Retorno do que foi feito
-        return response()->json( $retorno );
+        return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
     }
 
 
@@ -286,50 +307,86 @@ class APIController extends Controller
             $retorno = "Senha nova diferente da confirmacao!";
         }
 
+        $status = true;
+        $message = "Senha atualizada";
+        $statusHttp = 200;
+
         // Gravando nova senha se não foi encontrado problemas
         if ( $retorno == 'ok' )
         {
             $atualizarSenhaUsuario->password = Hash::make( $senha );
             $atualizarSenhaUsuario->save();
         }
+        else
+        {
+            $status = false;
+            $message = $retorno;
+            $statusHttp = 401;
+        }
 
-        // Retorno do que foi feito
-        return response()->json( $retorno );
+        return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
     }
 
 
     public function login(Request $request)
     {
-        $id     = $request->id;
+        $email  = $request->email;
         $senha  = $request->senha;
 
-        $retorno            = "ok";
+        $status = true;
+        $message = "Usuario autorizado / Token gerado";
+        $retorno = "";
+        $userIDreturn = 0;
+        $statusHttp = 200;
 
-        $user = User::find($id);
+        $users = User::selectRaw('users.id, users.name, users.email, users.password')
+        ->where ( 'users.email', '=', $email)
+        ->get();
+
+        $user = null;
+
+        foreach ($users as $userAtual) // Sempre vai retornar apenas 1 registro (cada pedido só tem 1 valor total), mas é preciso fazer um foreach para acessar o valor
+        {
+            $user = $userAtual;
+        }
 
         if ( is_null($user) )
         {
-            $retorno = 'Usuario nao encontrado!';
+            $status = false;
+            $message = 'Usuario nao encontrado!';
+            $statusHttp = 401;
         }
 
         if ( !is_null($user) )
         {
             if ( !Hash::check($senha, $user->password)  )
             {
-                $retorno = "Senha invalida";
+                $status = false;
+                $message = "Senha invalida";
+                $statusHttp = 401;
             }
         }
 
-        // Gravando usuário se não foi encontrado problemas
-        if ( $retorno == 'ok' )
+        // Criando token se não foi encontrado problemas
+        if ( $status )
         {
-            // Retornar token?
+            $userId     = $user->id;
+            $secret     = $this->secretToken;
+            $expiration = time() + 3600;
+            $issuer     = $request->ip(); // ip do usuário
+
+            $retorno = Token::create( $userId, $secret, $expiration, $issuer );
+
+            // Gravando token
+            $user->token = $retorno;
+            $user->save();
+
+            $userIDreturn = $user->id;
         }
 
         // Retorno do que foi feito
-        return response()->json( $retorno );
+        return response()->json( [ 'success' => $status, 'message' => $message, 'token' => $retorno, 'user_id' => $userIDreturn ], $statusHttp );
     }
-
 
     public function carrinho( $idUser )
     {
