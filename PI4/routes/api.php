@@ -15,6 +15,12 @@ use App\Http\Controllers\APIController;
 |
 */
 
+// usar se tiver problemas com cors
+Route::middleware( ['Cors', 'TrustProxies'] )->group( function ()
+{
+
+});
+
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });

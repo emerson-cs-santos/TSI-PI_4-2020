@@ -65,5 +65,7 @@ class Kernel extends HttpKernel
         'is_admin' => \App\Http\Middleware\IsAdmin::class,
         'VerifyCategoriesCount' => \App\Http\Middleware\VerifyCategoriesCount::class,
         'ApiSecurity' => \App\Http\Middleware\ApiSecurity::class,
+        'TrustProxies' => \App\Http\Middleware\TrustProxies::class,
+        'Cors' => \App\Http\Middleware\Cors::class,
     ];
 }
