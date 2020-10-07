@@ -388,6 +388,33 @@ class APIController extends Controller
         return response()->json( [ 'success' => $status, 'message' => $message, 'token' => $retorno, 'user_id' => $userIDreturn ], $statusHttp );
     }
 
+    public function logout(Request $request)
+    {
+        $user_id  = $request->user_id;
+
+        $status = true;
+        $message = "Usuario deslogado";
+        $statusHttp = 200;
+
+        $user = User::find($user_id);
+
+        if ( is_null($user) )
+        {
+            $status = false;
+            $message = 'Usuario nao encontrado!';
+            $statusHttp = 404;
+        }
+
+        if ( $status )
+        {
+            $user->token = '';
+            $user->save();
+        }
+
+        // Retorno do que foi feito
+        return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+    }
+
     public function carrinho( $idUser )
     {
         $retorno = "ok";

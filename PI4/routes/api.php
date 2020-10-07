@@ -55,6 +55,9 @@ Route::post( '/registrar_usuario',                  [APIController::class, 'regi
 // Login
 Route::post( '/loginAPI',                           [APIController::class, 'login'] );
 
+// Logout
+Route::post( '/logoutAPI',                           [APIController::class, 'logout'] );
+
 
 // Rotas abaixo precisam passar token válido
 Route::middleware( ['ApiSecurity'] )->group( function ()
