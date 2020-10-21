@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\APIController;
+use App\Models\Category;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,11 +15,22 @@ use App\Http\Controllers\APIController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+// Route::get('todos', function ( Request $request ) {
+//     $todo = [
+//         [    "userId" => 1,
+//             "id"=>  1,
+//         "title"=>  "delectus aut autem",
+//         "completed"=> false]
+//     ];
+
+//     $categoria = Category::find(8);
+//     return response()->json($todo);
+// });
 
 // usar se tiver problemas com cors
 Route::middleware( ['Cors', 'TrustProxies'] )->group( function ()
 {
-
+  //  Route::get( '/categorias',                          [APIController::class, 'categorias'] );
 });
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -63,32 +75,41 @@ Route::post( '/logoutAPI',                           [APIController::class, 'log
 Route::middleware( ['ApiSecurity'] )->group( function ()
 {
     // Retorna informações do usuario
-    Route::get( 'usuario/{id}',                     [APIController::class, 'verUsuario'] );
+    Route::get( 'usuario/{id}',                             [APIController::class, 'verUsuario'] );
 
     // Editar usuário
-    Route::put( '/atualizar_usuario/{id}',          [APIController::class, 'atualizarUsuario'] );
+    Route::put( '/atualizar_usuario/{id}',                  [APIController::class, 'atualizarUsuario'] );
 
     // Editar senha
-    Route::put( '/atualizar_senha/{id}',            [APIController::class, 'atualizarSenha'] );
+    Route::put( '/atualizar_senha/{id}',                    [APIController::class, 'atualizarSenha'] );
 
     // Carrinho - Retorna itens do carrinho
-    Route::get( '/carrinho/{idUser}',               [APIController::class, 'carrinho'] );
+    Route::get( '/carrinho/{idUser}',                       [APIController::class, 'carrinho'] );
+
+    // Carrinho - Retorna itens do carrinho
+    Route::get( '/carrinho_valor_total/{idUser}',           [APIController::class, 'carrinhoValorTotal'] );
+
+    // Carrinho - Retorna produto do carrinho
+    Route::get( '/carrinho_produto/{userid}/{produtoid}',   [APIController::class, 'carrinhoItem'] );
 
     // Carrinho - Incluir item
-    Route::post( '/carrinho_incluir',               [APIController::class, 'carrinhoIncluir'] );
+    Route::post( '/carrinho_incluir',                       [APIController::class, 'carrinhoIncluir'] );
 
-    // Carrinho - Remover item
-    Route::delete( '/carrinho_remover/{idUser}',    [APIController::class, 'carrinhoRemover'] );
+    // Carrinho - Remover 1 item (1 quantidade ) do produto
+    Route::delete( '/carrinho_remover_qtd/{idUser}',        [APIController::class, 'carrinhoRemoverQuantidade'] );
+
+    // Carrinho - Remover produto do carrinho
+    Route::delete( '/carrinho_remover/{idUser}',            [APIController::class, 'carrinhoRemover'] );
 
     // Carrinho finalizar e gerar pedido
-    Route::get( '/carrinho_finalizar/{idUser}',     [APIController::class, 'carrinhoFinalizar'] );
+    Route::get( '/carrinho_finalizar/{idUser}',             [APIController::class, 'carrinhoFinalizar'] );
 
     // Retornar Pedidos do usuário
-    Route::get( '/pedidos/{idUser}',                [APIController::class, 'pedidos'] );
+    Route::get( '/pedidos/{idUser}',                        [APIController::class, 'pedidos'] );
 
     // Retornar Valor total do pedido
-    Route::get( '/pedido_valor_total/{idPedido}',   [APIController::class, 'pedidoValorTotal'] );
+    Route::get( '/pedido_valor_total/{idPedido}',           [APIController::class, 'pedidoValorTotal'] );
 
     // Retornar itens do pedido
-    Route::get( '/pedidos_itens/{idPedido}',        [APIController::class, 'pedidosItens'] );
+    Route::get( '/pedidos_itens/{idPedido}',                [APIController::class, 'pedidosItens'] );
 });

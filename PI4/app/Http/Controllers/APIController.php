@@ -14,7 +14,57 @@ use ReallySimpleJWT\Token;
 
 class APIController extends Controller
 {
-    private $secretToken = 'sec!ReT423*&';
+    private $secretToken    = 'sec!ReT423*&';
+
+    // A função abaixo tira do resultado da select a ordenação gerada.
+    // Exemplo de como vem uma query ordenada pelo laravel (uma collection), neste caso foi ordenado order by id desc:
+        // [
+        //     "1":
+        //         {
+        //             "id": 8,
+        //             "name": "Teste 85"
+        //         },
+
+        //     "2":
+        //         {
+        //             "id": 5,
+        //             "name": "Teste 85"
+        //         },
+
+        //     "3":
+        //         {
+        //             "id": 3,
+        //             "name": "Teste 85"
+        //         }
+        // ]
+
+    // Por conta desses numeros, cada resposta ficou dentro deles, ficou uma reposta de jsons de numeros com outro json dentro.-bottom-0
+    // Essa função faz um for na reposta atribuindo em outro array ignorando esses numeros, ficando a resposta assim:
+        // [
+        //     {
+        //         "id": 8,
+        //         "name": "teste 8"
+        //     },
+        //     {
+        //         "id": 5,
+        //         "name": "Playstation"
+        //     },
+        //     {
+        //         "id": 3,
+        //         "name": "teste 5"
+        //     }
+        // ]
+    private function tirarIndicadorOrdenacao( $SelectResultados ): array
+    {
+        $Resposta = [];
+
+        foreach ($SelectResultados as $SelectResultado)
+        {
+             array_push( $Resposta, $SelectResultado );
+        }
+
+        return $Resposta;
+    }
 
     public function telaInicial()
     {
@@ -41,7 +91,7 @@ class APIController extends Controller
     {
         $categorias = Category::all()->sortByDesc('id');
 
-        return response()->json( $categorias );
+        return response()->json( $this->tirarIndicadorOrdenacao( $categorias ) );
     }
 
 
@@ -50,7 +100,7 @@ class APIController extends Controller
     {
         $produtos = Product::all()->where('category_id', '=' , $id_categoria)->sortByDesc('id');
 
-        return response()->json( $produtos );
+        return response()->json( $this->tirarIndicadorOrdenacao( $produtos ) );
     }
 
 
@@ -58,7 +108,7 @@ class APIController extends Controller
     {
         $lancamentos    = Product::all()->sortByDesc('id');
 
-        return response()->json( $lancamentos );
+        return response()->json( $this->tirarIndicadorOrdenacao( $lancamentos ) );
     }
 
 
@@ -66,7 +116,7 @@ class APIController extends Controller
     {
         $maisVendidos   = Product::all()->sortByDesc('sold');
 
-        return response()->json( $maisVendidos );
+        return response()->json( $this->tirarIndicadorOrdenacao( $maisVendidos ) );
     }
 
 
@@ -417,14 +467,76 @@ class APIController extends Controller
 
     public function carrinho( $idUser )
     {
-        $retorno = "ok";
+        $status = true;
+        $message = "";
+        $statusHttp = 200;
 
         if ( is_null( User::find( $idUser ) ) )
         {
-            $retorno = "Usuario nao encontrado";
+            $message = "Usuario nao encontrado";
+            $status = false;
+            $statusHttp = 404;
         }
 
-        if ( $retorno == 'ok' )
+        if ( $status )
+        {
+            $retornoFinal = [];
+
+            $itens = Carrinho::selectRaw('carrinhos.product_id, products.name, sum(carrinhos.quantidade) as qtd_total')
+            ->join('products', 'products.id', '=', 'carrinhos.product_id')
+            ->where('user_id', '=', $idUser )
+            ->groupBy('carrinhos.product_id','products.name')
+            ->orderBy('products.name')
+            ->get();
+
+            foreach ($itens as $item)
+            {
+                $produto    = Product::withTrashed()->find($item->product_id);
+                $categoria  = Category::withTrashed()->find($produto->category_id);
+
+                $imagem     = $produto->image;
+                $titulo     = $produto->name;
+                $produtoID  = $produto->id;
+                $plataforma = $categoria->name;
+                $preco      = $produto->price;
+                $subTotal   = $item->qtd_total * $produto->price;
+                $qtd        = $item->qtd_total;
+
+                $retorno = [
+                    "imagem"        => $imagem
+                    ,"titulo"       => $titulo
+                    ,'produto_id'   => $produtoID
+                    ,"plataforma"   => $plataforma
+                    ,"preco"        => $preco
+                    ,"subtotal"     => $subTotal
+                    ,"quantidade"   => $qtd
+                ];
+
+                array_push( $retornoFinal, $retorno );
+            }
+
+            return response()->json( $retornoFinal );
+        }
+        else
+        {
+            return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+        }
+    }
+
+    public function carrinhoValorTotal( $idUser )
+    {
+        $status = true;
+        $message = "";
+        $statusHttp = 200;
+
+        if ( is_null( User::find( $idUser ) ) )
+        {
+            $message = "Usuario nao encontrado";
+            $status = false;
+            $statusHttp = 404;
+        }
+
+        if ( $status )
         {
             $itens = Carrinho::selectRaw('carrinhos.product_id, products.name, sum(carrinhos.quantidade) as qtd_total')
             ->join('products', 'products.id', '=', 'carrinhos.product_id')
@@ -433,10 +545,87 @@ class APIController extends Controller
             ->orderBy('products.name')
             ->get();
 
-            return response()->json( $itens );
+            $total = 0;
+
+            foreach ($itens as $item)
+            {
+                $produto    = Product::withTrashed()->find($item->product_id);
+                $subTotal   = $item->qtd_total * $produto->price;
+                $total      = $total + $subTotal;
+            }
+
+            return response()->json( 'R$'. number_format($total, 2,',','.') );
+        }
+        else
+        {
+            return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+        }
+    }
+
+    public function carrinhoItem( $userid, $produtoid )
+    {
+        $status = true;
+        $message = "";
+        $statusHttp = 200;
+
+        if ( is_null( User::find( $userid ) ) )
+        {
+            $message = "Usuario nao encontrado";
+            $status = false;
+            $statusHttp = 404;
         }
 
-        return response()->json( $retorno );
+        if ( is_null( Product::find( $produtoid ) ) )
+        {
+            $message = "Produto nao encontrado";
+            $status = false;
+            $statusHttp = 404;
+        }
+
+        if ( $status )
+        {
+            $retornoFinal = [];
+
+            $itens = Carrinho::selectRaw('carrinhos.product_id, products.name, sum(carrinhos.quantidade) as qtd_total')
+            ->join('products', 'products.id', '=', 'carrinhos.product_id')
+            ->where('user_id', '=', $userid )
+            ->where('product_id', '=', $produtoid)
+            ->groupBy('carrinhos.product_id','products.name')
+            ->orderBy('products.name')
+            ->get();
+
+            foreach ($itens as $item)
+            {
+                $produto    = Product::withTrashed()->find($item->product_id);
+                $categoria  = Category::withTrashed()->find($produto->category_id);
+
+                $imagem     = $produto->image;
+                $titulo     = $produto->name;
+                $produtoID  = $produto->id;
+                $plataforma = $categoria->name;
+                $preco      = $produto->price;
+                $subTotal   = $item->qtd_total * $produto->price;
+                $qtd        = $item->qtd_total;
+
+                $retorno = [
+                    "imagem"        => $imagem
+                    ,"titulo"       => $titulo
+                    ,'produto_id'   => $produtoID
+                    ,"plataforma"   => $plataforma
+                    ,"preco"        => $preco
+                    ,"subtotal"     => $subTotal
+                    ,"quantidade"   => $qtd
+                ];
+
+                array_push( $retornoFinal, $retorno );
+            }
+
+            return response()->json( $retornoFinal );
+        }
+        else
+        {
+            return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+        }
     }
 
 
@@ -445,19 +634,25 @@ class APIController extends Controller
         $userID     = $request->user_id;
         $produtoID  = $request->produto_id;
 
-        $retorno            = "ok";
+        $status = true;
+        $message = "Produto adicionado";
+        $statusHttp = 200;
 
         if ( is_null( Product::find( $produtoID ) ) )
         {
-            $retorno = "Produto nao encontrado";
+            $message = "Produto nao encontrado";
+            $status = false;
+            $statusHttp = 404;
         }
 
         if ( is_null( User::find( $userID ) ) )
         {
-            $retorno = "Usuario nao encontrado";
+            $message = "Usuario nao encontrado";
+            $status = false;
+            $statusHttp = 404;
         }
 
-        if ( $retorno == 'ok' )
+        if ( $status )
         {
             $produtoNome    = Product::find( $produtoID )->name;
             $estoqueAtual   = Product::find( $produtoID )->stock;
@@ -465,12 +660,14 @@ class APIController extends Controller
 
             if ( $quantidade > $estoqueAtual )
             {
-                $retorno = "Jogo ($produtoNome) nao possui estoque disponivel!";
+                $message = "Jogo ($produtoNome) nao possui estoque disponivel!";
+                $status = false;
+                $statusHttp = 401;
             }
         }
 
         // Gravando carrinho se não foi encontrado problemas
-        if ( $retorno == 'ok' )
+        if ( $status )
         {
             Carrinho::create([
                 'product_id'    => $produtoID
@@ -480,7 +677,7 @@ class APIController extends Controller
         }
 
         // Retorno do que foi feito
-        return response()->json( $retorno );
+        return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
     }
 
 
@@ -488,30 +685,41 @@ class APIController extends Controller
     {
         $produtoID = $request->produto_id;
 
-        $retorno   = "ok";
+        $status = true;
+        $message = "Produto removido do carrinho";
+        $statusHttp = 200;
 
         if ( is_null( User::find( $idUser ) ) )
         {
-            $retorno = "Usuario nao encontrado";
+            $message = "Usuario nao encontrado";
+            $status = false;
+            $statusHttp = 404;
         }
 
         if ( is_null( Product::find( $produtoID ) ) )
         {
-            $retorno = "Produto nao encontrado";
+            $message = "Produto nao encontrado";
+            $status = false;
+            $statusHttp = 404;
         }
 
-        // Verificar se produto existe no carrinho
-        $carrinhoProdutos = Carrinho::all()
-        ->where('user_id', '=' , $idUser)
-        ->where('product_id', $produtoID);
-
-        if ( count($carrinhoProdutos) == 0 )
+        if ( $status )
         {
-            $retorno = "Produto nao encontrado no carrinho desse usuario";
+            // Verificar se produto existe no carrinho
+            $carrinhoProdutos = Carrinho::all()
+            ->where('user_id', '=' , $idUser)
+            ->where('product_id', $produtoID);
+
+            if ( count($carrinhoProdutos) == 0 )
+            {
+                $message = "Produto nao encontrado no carrinho desse usuario";
+                $status = false;
+                $statusHttp = 404;
+            }
         }
 
-        //  // Deletando todos os registros desse produto do carrinho desse usuario se não foi encontrado problemas
-        if ( $retorno == 'ok' )
+        // Deletando todos os registros desse produto do carrinho desse usuario se não foi encontrado problemas
+        if ( $status )
         {
             $Itens = Carrinho::withTrashed()
                 ->where('user_id', $idUser )
@@ -525,17 +733,73 @@ class APIController extends Controller
         }
 
         // Retorno do que foi feito
-        return response()->json( $retorno );
+        return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+    }
+
+
+    public function carrinhoRemoverQuantidade( Request $request, $idUser )
+    {
+        $produtoID = $request->produto_id;
+
+        $status = true;
+        $message = "Quantidade removida";
+        $statusHttp = 200;
+
+        if ( is_null( User::find( $idUser ) ) )
+        {
+            $message = "Usuario nao encontrado";
+            $statusHttp = 404;
+            $status = false;
+        }
+
+        if ( is_null( Product::find( $produtoID ) ) )
+        {
+            $message = "Produto nao encontrado";
+            $statusHttp = 404;
+            $status = false;
+        }
+
+        if ( $status )
+        {
+            // Verificar se produto existe no carrinho
+            $carrinhoProdutos = Carrinho::all()
+            ->where('user_id', '=' , $idUser)
+            ->where('product_id', $produtoID);
+
+            if ( count($carrinhoProdutos) == 0 )
+            {
+                $message = "Produto nao encontrado no carrinho desse usuario";
+                $statusHttp = 404;
+                $status = false;
+            }
+        }
+
+        if ( $status )
+        {
+            $Item = Carrinho::withTrashed()
+                ->where('user_id', $idUser )
+                ->where('product_id', $produtoID)
+                ->first();
+
+            $Item->forceDelete();
+        }
+
+        // Retorno do que foi feito
+        return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
     }
 
 
     public function carrinhoFinalizar( $idUser )
     {
-        $retorno = "ok";
+        $status = true;
+        $message = "Pedido gerado";
+        $statusHttp = 200;
 
         if ( is_null( User::find( $idUser ) ) )
         {
-            $retorno = "Usuario nao encontrado";
+            $message = "Usuario nao encontrado";
+            $status = false;
+            $statusHttp = 404;
         }
 
         // Verificando se existe produtos no carrinho do usuario
@@ -543,37 +807,46 @@ class APIController extends Controller
 
         if ( $carrinhoQtd == 0 )
         {
-            $retorno = "Nao ha produtos no carrinho desse usuario";
+            $message = "Nao ha produtos no carrinho desse usuario";
+            $status = false;
+            $statusHttp = 404;
         }
 
         // Checar o estoque de cada produto no carrinho, essa select agrupa e soma a qtd dos mesmos produtos
-        $Itens = Carrinho::selectRaw('carrinhos.product_id, sum(carrinhos.quantidade) as quantidade')
-        ->where('user_id', '=', $idUser )
-        ->groupBy('carrinhos.product_id')
-        ->get();
-
-        // Checar estoque de cada produto
-        foreach ($Itens as $item)
+        if ( $status )
         {
-            $produtoID    = $item->product_id;
+            $Itens = Carrinho::selectRaw('carrinhos.product_id, sum(carrinhos.quantidade) as quantidade')
+            ->where('user_id', '=', $idUser )
+            ->groupBy('carrinhos.product_id')
+            ->get();
 
-            if ( is_null( Product::find( $produtoID ) ) )
+            // Checar estoque de cada produto
+            foreach ($Itens as $item)
             {
-                $retorno = "Produto de ID $produtoID nao foi encontrado no sistema";
-            }
+                $produtoID    = $item->product_id;
 
-            $produtoNome    = Product::find( $produtoID )->name;
-            $estoqueAtual   = Product::find( $produtoID )->stock;
-            $quantidade     = $item->quantidade;
+                if ( is_null( Product::find( $produtoID ) ) )
+                {
+                    $message = "Produto de ID $produtoID nao foi encontrado no sistema";
+                    $status = false;
+                    $statusHttp = 404;
+                }
 
-            if ( $quantidade > $estoqueAtual )
-            {
-                $retorno = "Produto ID $produtoID nao possui estoque disponivel!";
+                $produtoNome    = Product::find( $produtoID )->name;
+                $estoqueAtual   = Product::find( $produtoID )->stock;
+                $quantidade     = $item->quantidade;
+
+                if ( $quantidade > $estoqueAtual )
+                {
+                    $message = "Produto ID $produtoID nao possui estoque disponivel!";
+                    $status = false;
+                    $statusHttp = 401;
+                }
             }
         }
 
         // Se não foi encontrado problemas, gerar pedido e remover itens do carrinho
-        if ( $retorno == 'ok' )
+        if ( $status )
         {
             // Gerar pedido
             $pedido = Pedido::create([ 'user_id' => $idUser ]);
@@ -608,45 +881,82 @@ class APIController extends Controller
             }
 
             $pedido = $pedido->id;
-            $retorno = "Numero do pedido gerado: $pedido";
+            $message = "Numero do pedido gerado: $pedido";
         }
 
-        return response()->json( $retorno );
+        return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
     }
 
     public function pedidos( $idUser )
     {
-        $retorno = "ok";
+        $status = true;
+        $message = "";
+        $statusHttp = 200;
 
         if ( is_null( User::find( $idUser ) ) )
         {
-            $retorno = "Usuario nao encontrado";
+            $message = "Usuario nao encontrado";
+            $status = false;
+            $statusHttp = 404;
         }
 
-        if ( $retorno == 'ok' )
+        if ( $status )
         {
-            $pedido = Pedido::withTrashed()->selectRaw('pedidos.*')
+            $retornoFinal = [];
+
+            $pedidos = Pedido::withTrashed()->selectRaw('pedidos.*')
             ->where('user_id', '=', $idUser )
             ->orderByDesc('pedidos.id')
             ->get();
-            return response()->json( $pedido );
-        }
 
-        return response()->json( $retorno );
+            foreach ($pedidos as $pedido)
+            {
+                // Valor total
+                $valores = ItemPedido::selectRaw('sum(item_pedidos.quantidade * item_pedidos.preco) as total')
+                ->where('fk_pedido', '=', $pedido->id)
+                ->groupBy('fk_pedido')
+                ->get();
+
+                $valorTotal = '0';
+                foreach ($valores as $valor) // Sempre vai retornar apenas 1 registro (cada pedido só tem 1 valor total), mas é preciso fazer um foreach para acessar o valor
+                {
+                     $valorTotal = floatval($valor->total);
+                }
+                $valortotal = 'R$'.number_format($valorTotal, 2,',','.');
+
+                $retorno = [
+                    "id"        => $pedido->id
+                    ,"data"     => date('d/m/Y', strtotime( $pedido->created_at )   )
+                    ,'total'    => $valortotal
+                ];
+                array_push( $retornoFinal, $retorno );
+            }
+
+            return response()->json( $retornoFinal );
+        }
+        else
+        {
+            return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+        }
     }
 
     public function pedidoValorTotal( $idPedido )
     {
-        $retorno = "ok";
+        $retorno = "";
+        $status = true;
+        $message = "";
+        $statusHttp = 200;
 
         $pedido = Pedido::withTrashed( $idPedido ) ;
 
         if ( is_null( $pedido  ) )
         {
-            $retorno = "Pedido nao encontrado";
+            $message = "Pedido nao encontrado";
+            $status = false;
+            $statusHttp = 404;
         }
 
-        if ( $retorno == 'ok' )
+        if ( $status )
         {
             $valores = ItemPedido::selectRaw('sum(item_pedidos.quantidade * item_pedidos.preco) as total')
             ->where('fk_pedido', '=', $idPedido)
@@ -659,27 +969,39 @@ class APIController extends Controller
                  $valorTotal = floatval($valor->total);
             }
             $retorno = 'R$'.number_format($valorTotal, 2,',','.');
-        }
 
-        return response()->json( $retorno );
+            return response()->json( $retorno );
+        }
+        else
+        {
+            return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+        }
     }
 
     public function pedidosItens( $idPedido )
     {
         $retorno = "ok";
+        $status = true;
+        $message = "";
+        $statusHttp = 200;
 
         $pedido = Pedido::withTrashed( $idPedido ) ;
 
         if ( is_null( $pedido  ) )
         {
-            $retorno = "Pedido nao encontrado";
+            $message = "Pedido nao encontrado";
+            $status = false;
+            $statusHttp = 404;
         }
 
-        if ( $retorno == 'ok' )
+        if ( $status )
         {
             $retorno = ItemPedido::selectRaw('item_pedidos.*')->where('fk_pedido', '=', $idPedido)->orderByDesc('id')->get();
+            return response()->json( $retorno );
         }
-
-        return response()->json( $retorno );
+        else
+        {
+            return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+        }
     }
 }
