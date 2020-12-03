@@ -15,7 +15,7 @@ class CreateProductRequest extends FormRequest
     {
         return [
             'name'          => 'required|unique:products'
-            ,'imagem'       => 'max:2000'
+            ,'imagem'       => 'required|max:2000'
             ,'descricao'    => 'required'
             ,'preco'        => 'required|max:10'
             ,'discount'     => 'max:5'

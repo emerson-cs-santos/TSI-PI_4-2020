@@ -43,7 +43,14 @@ class ProductsController extends Controller
 
         if ( !empty($file) )
         {
-             $data               = file_get_contents($file);
+            $image = imagecreatefrompng($file);
+            $image = imagescale($image , 200, 200);
+            ob_start();
+            imagepng($image);
+            $data = ob_get_contents();
+            ob_end_clean();
+
+            //$data                = file_get_contents($file);
              $dataEncoded        = base64_encode($data);
              $imagem_convertida  = "data:image/jpeg;base64,$dataEncoded";
         }
@@ -106,7 +113,14 @@ class ProductsController extends Controller
         $file = $request->file('imagem');
         if ( !empty($file) )
         {
-             $data               = file_get_contents($file);
+            $image = imagecreatefrompng($file);
+            $image = imagescale($image , 200, 200);
+            ob_start();
+            imagepng($image);
+            $data = ob_get_contents();
+            ob_end_clean();
+
+            //$data                = file_get_contents($file);
              $dataEncoded        = base64_encode($data);
              $imagem_convertida  = "data:image/jpeg;base64,$dataEncoded";
 

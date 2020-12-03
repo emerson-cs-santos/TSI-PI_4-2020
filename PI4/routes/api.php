@@ -40,6 +40,15 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // Retorna informações para a tela principal ( categorias, lançamentos e mais vendidos )
 Route::get( '/main',                                [APIController::class, 'telaInicial'] );
 
+// Retorna todas as categorias main
+Route::get( '/categoriasmain',                      [APIController::class, 'categoriasMain'] );
+
+// Retorna os lançamentos main
+Route::get( '/lancamentosmain',                     [APIController::class, 'lancamentosMain'] );
+
+// Retorna os mais vendidos main
+Route::get( '/mais_vendidosmain',                   [APIController::class, 'maisVendidosMain'] );
+
 // Retorna todas as categorias
 Route::get( '/categorias',                          [APIController::class, 'categorias'] );
 
@@ -99,7 +108,7 @@ Route::middleware( ['ApiSecurity'] )->group( function ()
     Route::delete( '/carrinho_remover_qtd/{idUser}',        [APIController::class, 'carrinhoRemoverQuantidade'] );
 
     // Carrinho - Remover produto do carrinho
-    Route::delete( '/carrinho_remover/{idUser}',            [APIController::class, 'carrinhoRemover'] );
+    Route::put( '/carrinho_remover/{idUser}',            [APIController::class, 'carrinhoRemover'] );
 
     // Carrinho finalizar e gerar pedido
     Route::get( '/carrinho_finalizar/{idUser}',             [APIController::class, 'carrinhoFinalizar'] );

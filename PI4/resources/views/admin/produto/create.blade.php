@@ -69,7 +69,7 @@
 
                                     <div class="form-group mt-4">
                                         <label for="imagem">Definir imagem</label>
-                                        <input class="form-control" type="file" name="imagem" id="imagem" accept="image/png, image/jpeg, image/jpg" onchange="preview_image(event)" >
+                                        <input class="form-control" type="file" name="imagem" id="imagem" accept="image/png" onchange="preview_image(event)" >
 
                                         <figure class="rounded mx-auto d-block mt-4 img_extra_small_prod img_small_prod img_normal_prod img_grande_prod text-center">
                                             <img id="ExibirIMG_inputfile" class="form-control img_extra_small_prod img_small_prod img_normal_prod img_grande_prod" alt="Imagem do Produto" src=" @if( empty(old('imagem')) )  {{asset('admin_assets/images/produto_sem_imagem.jpg')}} @endif" >

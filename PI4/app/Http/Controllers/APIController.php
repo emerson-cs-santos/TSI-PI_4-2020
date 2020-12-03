@@ -87,9 +87,47 @@ class APIController extends Controller
     }
 
 
+    public function categoriasMain()
+    {
+        $categorias = Category::all()->sortByDesc('id')->take(5);
+
+        return response()->json( $this->tirarIndicadorOrdenacao( $categorias ) );
+    }
+
+
+    public function lancamentosMain()
+    {
+     //   $lancamentos    = Product::all()->sortByDesc('id')->take(5);
+
+        $lancamentos = Product::selectRaw('products.*, categories.name as categoryName')
+        ->join('categories', 'categories.id', '=', 'products.category_id')
+        ->orderBy('id', 'desc')
+        ->take(5)
+        ->get();
+
+        //return response()->json( $this->tirarIndicadorOrdenacao( $lancamentos ) );
+        return response()->json( $lancamentos );
+    }
+
+
+    public function maisVendidosMain()
+    {
+      //  $maisVendidos   = Product::all()->sortByDesc('sold')->take(5);
+
+        $maisVendidos = Product::selectRaw('products.*, categories.name as categoryName')
+        ->join('categories', 'categories.id', '=', 'products.category_id')
+        ->orderBy('sold', 'desc')
+        ->take(5)
+        ->get();
+
+      //  return response()->json( $this->tirarIndicadorOrdenacao( $maisVendidos ) );
+      return response()->json( $maisVendidos );
+    }
+
+
     public function categorias()
     {
-        $categorias = Category::all()->sortByDesc('id');
+        $categorias = Category::all()->sortBy('name');
 
         return response()->json( $this->tirarIndicadorOrdenacao( $categorias ) );
     }
@@ -98,25 +136,35 @@ class APIController extends Controller
     // Produtos da categoria
     public function categoriaProdutos( $id_categoria )
     {
-        $produtos = Product::all()->where('category_id', '=' , $id_categoria)->sortByDesc('id');
+        $produtos = Product::selectRaw('products.*, categories.name as categoryName')
+        ->join('categories', 'categories.id', '=', 'products.category_id')
+        ->where('category_id', '=' , $id_categoria)
+        ->orderBy('id', 'desc')
+        ->get();
 
-        return response()->json( $this->tirarIndicadorOrdenacao( $produtos ) );
+        return response()->json( $produtos );
     }
 
 
     public function lancamentos()
     {
-        $lancamentos    = Product::all()->sortByDesc('id');
+        $lancamentos = Product::selectRaw('products.*, categories.name as categoryName')
+        ->join('categories', 'categories.id', '=', 'products.category_id')
+        ->orderBy('id', 'desc')
+        ->get();
 
-        return response()->json( $this->tirarIndicadorOrdenacao( $lancamentos ) );
+        return response()->json( $lancamentos );
     }
 
 
     public function maisVendidos()
     {
-        $maisVendidos   = Product::all()->sortByDesc('sold');
+      $maisVendidos = Product::selectRaw('products.*, categories.name as categoryName')
+      ->join('categories', 'categories.id', '=', 'products.category_id')
+      ->orderBy('sold', 'desc')
+      ->get();
 
-        return response()->json( $this->tirarIndicadorOrdenacao( $maisVendidos ) );
+        return response()->json( $maisVendidos );
     }
 
 
@@ -126,7 +174,7 @@ class APIController extends Controller
 
         if($buscar != "")
         {
-            $products = Product::selectRaw('products.*')
+            $products = Product::selectRaw('products.*, categories.name as categoryName')
             ->join('categories', 'categories.id', '=', 'products.category_id')
             ->where ( 'products.name', 'LIKE', '%' . $buscar . '%' )
             ->orWhere ( 'categories.name', 'LIKE', '%' . $buscar . '%' )
@@ -135,7 +183,8 @@ class APIController extends Controller
         }
         else
         {
-            $products = Product::selectRaw('products.*')
+            $products = Product::selectRaw('products.*, categories.name as categoryName')
+            ->join('categories', 'categories.id', '=', 'products.category_id')
             ->orderBy('name')
             ->get();
         }
@@ -146,7 +195,8 @@ class APIController extends Controller
 
     public function produtos( )
     {
-        $products = Product::selectRaw('products.*')
+        $products = Product::selectRaw('products.*, categories.name as categoryName')
+        ->join('categories', 'categories.id', '=', 'products.category_id')
         ->orderBy('name')
         ->get();
 
@@ -156,7 +206,24 @@ class APIController extends Controller
 
     public function verProduto( $idProduto )
     {
-        $produto = Product::find( $idProduto );
+        $produto = Product::selectRaw('products.*, categories.name as categoryName')
+        ->join('categories', 'categories.id', '=', 'products.category_id')
+        ->where('products.id', '=' , $idProduto)
+        ->get();
+
+        // Calculando preco com desconto
+        foreach ($produto as $item)
+        {
+            if ( $item->discount > 0 )
+            {
+                $item->discount = strval( $item->price * ( 1-$item->discount/100 ) );
+            }
+            else
+            {
+                $item->discount = "";
+            }
+
+        }
 
         return response()->json( $produto );
     }
@@ -217,7 +284,7 @@ class APIController extends Controller
             $retorno = "Senhas diferentes!";
         }
 
-        $status = true;
+        $status = 'true';
         $message = "Usuario criado";
         $statusHttp = 200;
 
@@ -235,9 +302,9 @@ class APIController extends Controller
         }
         else
         {
-            $status = false;
+            $status = 'false';
             $message = $retorno;
-            $statusHttp = 401;
+          //  $statusHttp = 401;
         }
 
         return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
@@ -307,7 +374,7 @@ class APIController extends Controller
 
         }
 
-        $status = true;
+        $status = 'true';
         $message = "Usuario atualizado";
         $statusHttp = 200;
 
@@ -321,9 +388,8 @@ class APIController extends Controller
         }
         else
         {
-            $status = false;
+            $status = 'false';
             $message = $retorno;
-            $statusHttp = 401;
         }
 
         return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
@@ -357,7 +423,7 @@ class APIController extends Controller
             $retorno = "Senha nova diferente da confirmacao!";
         }
 
-        $status = true;
+        $status = 'true';
         $message = "Senha atualizada";
         $statusHttp = 200;
 
@@ -369,9 +435,9 @@ class APIController extends Controller
         }
         else
         {
-            $status = false;
+            $status = 'false';
             $message = $retorno;
-            $statusHttp = 401;
+          //  $statusHttp = 401;
         }
 
         return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
@@ -432,6 +498,8 @@ class APIController extends Controller
             $user->save();
 
             $userIDreturn = $user->id;
+            $message = $user->name;
+            $status = $user->email;
         }
 
         // Retorno do que foi feito
@@ -467,19 +535,19 @@ class APIController extends Controller
 
     public function carrinho( $idUser )
     {
-        $status = true;
-        $message = "";
-        $statusHttp = 200;
+     //   $status = true;
+    //    $message = "";
+    //    $statusHttp = 200;
 
-        if ( is_null( User::find( $idUser ) ) )
-        {
-            $message = "Usuario nao encontrado";
-            $status = false;
-            $statusHttp = 404;
-        }
+        // if ( is_null( User::find( $idUser ) ) )
+        // {
+        //     $message = "Usuario nao encontrado";
+        //     $status = false;
+        //     $statusHttp = 401;
+        // }
 
-        if ( $status )
-        {
+        // if ( $status )
+        // {
             $retornoFinal = [];
 
             $itens = Carrinho::selectRaw('carrinhos.product_id, products.name, sum(carrinhos.quantidade) as qtd_total')
@@ -507,8 +575,8 @@ class APIController extends Controller
                     ,"titulo"       => $titulo
                     ,'produto_id'   => $produtoID
                     ,"plataforma"   => $plataforma
-                    ,"preco"        => $preco
-                    ,"subtotal"     => $subTotal
+                    ,"preco"        => 'R$'. str_replace(".", ",", $preco)
+                    ,"subtotal"     => 'R$'. number_format($subTotal, 2,',','.')
                     ,"quantidade"   => $qtd
                 ];
 
@@ -516,11 +584,11 @@ class APIController extends Controller
             }
 
             return response()->json( $retornoFinal );
-        }
-        else
-        {
-            return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
-        }
+   //     }
+   //     else
+  //      {
+    //        return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+     //   }
     }
 
     public function carrinhoValorTotal( $idUser )
@@ -536,8 +604,13 @@ class APIController extends Controller
             $statusHttp = 404;
         }
 
-        if ( $status )
-        {
+        // if ( $status )
+        // {
+            $total = 0;
+            $retornoFinal = [
+                "total" => 'R$'. number_format($total, 2,',','.')
+            ];
+
             $itens = Carrinho::selectRaw('carrinhos.product_id, products.name, sum(carrinhos.quantidade) as qtd_total')
             ->join('products', 'products.id', '=', 'carrinhos.product_id')
             ->where('user_id', '=', $idUser )
@@ -545,21 +618,25 @@ class APIController extends Controller
             ->orderBy('products.name')
             ->get();
 
-            $total = 0;
+
 
             foreach ($itens as $item)
             {
                 $produto    = Product::withTrashed()->find($item->product_id);
                 $subTotal   = $item->qtd_total * $produto->price;
                 $total      = $total + $subTotal;
+
+                $retornoFinal = [
+                    "total" => 'R$'. number_format($total, 2,',','.')
+                ];
             }
 
-            return response()->json( 'R$'. number_format($total, 2,',','.') );
-        }
-        else
-        {
-            return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
-        }
+            return response()->json( $retornoFinal );
+      //  }
+   //     else
+    //    {
+    //        return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+      //  }
     }
 
     public function carrinhoItem( $userid, $produtoid )
@@ -634,25 +711,25 @@ class APIController extends Controller
         $userID     = $request->user_id;
         $produtoID  = $request->produto_id;
 
-        $status = true;
+        $status = 'true';
         $message = "Produto adicionado";
         $statusHttp = 200;
 
         if ( is_null( Product::find( $produtoID ) ) )
         {
             $message = "Produto nao encontrado";
-            $status = false;
-            $statusHttp = 404;
+            $status = 'false';
+        //    $statusHttp = 404;
         }
 
         if ( is_null( User::find( $userID ) ) )
         {
             $message = "Usuario nao encontrado";
-            $status = false;
-            $statusHttp = 404;
+            $status = 'false';
+         //   $statusHttp = 404;
         }
 
-        if ( $status )
+        if ( $status == 'true' )
         {
             $produtoNome    = Product::find( $produtoID )->name;
             $estoqueAtual   = Product::find( $produtoID )->stock;
@@ -661,13 +738,13 @@ class APIController extends Controller
             if ( $quantidade > $estoqueAtual )
             {
                 $message = "Jogo ($produtoNome) nao possui estoque disponivel!";
-                $status = false;
-                $statusHttp = 401;
+                $status = 'false';
+          //      $statusHttp = 401;
             }
         }
 
         // Gravando carrinho se não foi encontrado problemas
-        if ( $status )
+        if ( $status == 'true' )
         {
             Carrinho::create([
                 'product_id'    => $produtoID
@@ -685,25 +762,25 @@ class APIController extends Controller
     {
         $produtoID = $request->produto_id;
 
-        $status = true;
+        $status = 'true';
         $message = "Produto removido do carrinho";
         $statusHttp = 200;
 
         if ( is_null( User::find( $idUser ) ) )
         {
             $message = "Usuario nao encontrado";
-            $status = false;
-            $statusHttp = 404;
+            $status = 'false';
+          //  $statusHttp = 404;
         }
 
         if ( is_null( Product::find( $produtoID ) ) )
         {
             $message = "Produto nao encontrado";
-            $status = false;
-            $statusHttp = 404;
+            $status = 'false';
+          //  $statusHttp = 404;
         }
 
-        if ( $status )
+        if ( $status == 'true' )
         {
             // Verificar se produto existe no carrinho
             $carrinhoProdutos = Carrinho::all()
@@ -713,13 +790,13 @@ class APIController extends Controller
             if ( count($carrinhoProdutos) == 0 )
             {
                 $message = "Produto nao encontrado no carrinho desse usuario";
-                $status = false;
-                $statusHttp = 404;
+                $status = 'false';
+               // $statusHttp = 404;
             }
         }
 
         // Deletando todos os registros desse produto do carrinho desse usuario se não foi encontrado problemas
-        if ( $status )
+        if ( $status == 'true' )
         {
             $Itens = Carrinho::withTrashed()
                 ->where('user_id', $idUser )
@@ -791,15 +868,15 @@ class APIController extends Controller
 
     public function carrinhoFinalizar( $idUser )
     {
-        $status = true;
+        $status = 'true';
         $message = "Pedido gerado";
         $statusHttp = 200;
 
         if ( is_null( User::find( $idUser ) ) )
         {
             $message = "Usuario nao encontrado";
-            $status = false;
-            $statusHttp = 404;
+            $status = 'false';
+          //  $statusHttp = 404;
         }
 
         // Verificando se existe produtos no carrinho do usuario
@@ -808,12 +885,12 @@ class APIController extends Controller
         if ( $carrinhoQtd == 0 )
         {
             $message = "Nao ha produtos no carrinho desse usuario";
-            $status = false;
-            $statusHttp = 404;
+            $status = 'false';
+          //  $statusHttp = 404;
         }
 
         // Checar o estoque de cada produto no carrinho, essa select agrupa e soma a qtd dos mesmos produtos
-        if ( $status )
+        if ( $status == 'true' )
         {
             $Itens = Carrinho::selectRaw('carrinhos.product_id, sum(carrinhos.quantidade) as quantidade')
             ->where('user_id', '=', $idUser )
@@ -828,8 +905,8 @@ class APIController extends Controller
                 if ( is_null( Product::find( $produtoID ) ) )
                 {
                     $message = "Produto de ID $produtoID nao foi encontrado no sistema";
-                    $status = false;
-                    $statusHttp = 404;
+                    $status = 'false';
+                   // $statusHttp = 404;
                 }
 
                 $produtoNome    = Product::find( $produtoID )->name;
@@ -839,14 +916,14 @@ class APIController extends Controller
                 if ( $quantidade > $estoqueAtual )
                 {
                     $message = "Produto ID $produtoID nao possui estoque disponivel!";
-                    $status = false;
-                    $statusHttp = 401;
+                    $status = 'false';
+                   // $statusHttp = 401;
                 }
             }
         }
 
         // Se não foi encontrado problemas, gerar pedido e remover itens do carrinho
-        if ( $status )
+        if ( $status == 'true' )
         {
             // Gerar pedido
             $pedido = Pedido::create([ 'user_id' => $idUser ]);
@@ -881,7 +958,7 @@ class APIController extends Controller
             }
 
             $pedido = $pedido->id;
-            $message = "Numero do pedido gerado: $pedido";
+            $message = $pedido;
         }
 
         return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
@@ -897,11 +974,11 @@ class APIController extends Controller
         {
             $message = "Usuario nao encontrado";
             $status = false;
-            $statusHttp = 404;
+          //  $statusHttp = 404;
         }
 
-        if ( $status )
-        {
+        // if ( $status )
+        // {
             $retornoFinal = [];
 
             $pedidos = Pedido::withTrashed()->selectRaw('pedidos.*')
@@ -933,11 +1010,11 @@ class APIController extends Controller
             }
 
             return response()->json( $retornoFinal );
-        }
-        else
-        {
-            return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
-        }
+        // }
+        // else
+        // {
+        //     return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+        // }
     }
 
     public function pedidoValorTotal( $idPedido )
@@ -953,8 +1030,10 @@ class APIController extends Controller
         {
             $message = "Pedido nao encontrado";
             $status = false;
-            $statusHttp = 404;
+         //   $statusHttp = 404;
         }
+
+        $valorTotal = '0';
 
         if ( $status )
         {
@@ -963,19 +1042,20 @@ class APIController extends Controller
             ->groupBy('fk_pedido')
             ->get();
 
-            $valorTotal = '0';
-            foreach ($valores as $valor) // Sempre vai retornar apenas 1 registro (cada pedido só tem 1 valor total), mas é preciso fazer um foreach para acessar o valor
+
+            foreach ($valores as $valor)
             {
                  $valorTotal = floatval($valor->total);
             }
             $retorno = 'R$'.number_format($valorTotal, 2,',','.');
+        }
 
-            return response()->json( $retorno );
-        }
-        else
-        {
-            return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
-        }
+        return response()->json( $retorno );
+
+        // else
+        // {
+        //     return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+        // }
     }
 
     public function pedidosItens( $idPedido )
@@ -991,17 +1071,44 @@ class APIController extends Controller
         {
             $message = "Pedido nao encontrado";
             $status = false;
-            $statusHttp = 404;
+          //  $statusHttp = 404;
         }
+
+        $retornoFinal = [];
 
         if ( $status )
         {
-            $retorno = ItemPedido::selectRaw('item_pedidos.*')->where('fk_pedido', '=', $idPedido)->orderByDesc('id')->get();
-            return response()->json( $retorno );
+            $itens = ItemPedido::selectRaw('item_pedidos.*')->where('fk_pedido', '=', $idPedido)->orderByDesc('id')->get();
+
+            foreach ($itens as $item)
+            {
+                $produto    = Product::withTrashed()->find($item->product_id);
+
+                $preco      = $produto->price;
+                $subTotal   = $item->quantidade * $produto->price;
+
+                $retorno = [
+                    "product_id"    =>  $item->product_id
+                    ,"produto"      =>  $produto->name
+                    ,"quantidade"   =>  $item->quantidade
+                    ,'valor'        =>  'R$'. str_replace(".", ",", $preco)
+                    ,'sutotal'      =>  'R$'. number_format($subTotal, 2,',','.')
+                ];
+
+                array_push( $retornoFinal, $retorno );
+            }
         }
-        else
-        {
-            return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
-        }
+
+        return response()->json( $retornoFinal );
+
+        // if ( $status )
+        // {
+        //     $retorno = ItemPedido::selectRaw('item_pedidos.*')->where('fk_pedido', '=', $idPedido)->orderByDesc('id')->get();
+        //     return response()->json( $retorno );
+        // }
+        // else
+        // {
+        //     return response()->json( [ 'success' => $status, 'message' => $message ], $statusHttp );
+        // }
     }
 }
