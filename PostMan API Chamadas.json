@@ -1,0 +1,870 @@
+{
+	"info": {
+		"_postman_id": "bc1f53da-9a75-4219-b257-9072d91c66cc",
+		"name": "Projeto Integrador 4",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Tela Principal NÃO USAR - USAR AS CHAMAS INDIVIDUAIS PARA CADA 1 DAS TRÊS",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/main",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"main"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Todas as categorias Main",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/categoriasmain",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"categoriasmain"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lançamentos Main",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/lancamentosmain",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"lancamentosmain"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mais Vendidos Main",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/mais_vendidosmain",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"mais_vendidosmain"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Todas as categorias",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/categorias",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"categorias"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Produtos da Categoria",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/categoria_produtos/8",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"categoria_produtos",
+						"8"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Lançamentos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/lancamentos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"lancamentos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Mais Vendidos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/mais_vendidos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"mais_vendidos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Busca",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/busca/pl",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"busca",
+						"pl"
+					]
+				},
+				"description": "Busca por nome do produto ou categoria"
+			},
+			"response": []
+		},
+		{
+			"name": "Todos os produtos",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/produtos",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"produtos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ver 1 produto",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/produto/14",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"produto",
+						"14"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Criar cadastro",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"postman6\",\r\n    \"email\": \"postman6@gmail.com\",\r\n    \"password\": \"12345678\",\r\n    \"password_confirmar\": \"12345678\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/registrar_usuario",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"registrar_usuario"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"email\": \"emersoncs@outlook.com.br\",\r\n    \"senha\": \"spyblack\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/loginAPI",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"loginAPI"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ver usuario",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDIxMTE3MzQsImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwMjEwODEzNH0.zHXP5_eDmkX5SfbI8KVeMfA-tIImEqCbsw3IhN2u-aA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/usuario/11",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"usuario",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Alterar usuario e e-mail",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDM2Mzg5MDcsImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwMzYzNTMwN30.EWNB3_m_tuyddfta4Y9h5mutNL5MypuQnSxvRkXFuwA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"emerson\",\r\n    \"email\": \"emersoncs@outlook.com.br\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/atualizar_usuario/11",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"atualizar_usuario",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar senha",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDIxMTE3MzQsImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwMjEwODEzNH0.zHXP5_eDmkX5SfbI8KVeMfA-tIImEqCbsw3IhN2u-aA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"senhaAtual\": \"12345678\",\r\n    \"senhaNova\": \"spypreto\",\r\n    \"senhaConfirmar\": \"spypreto\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/atualizar_senha/11",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"atualizar_senha",
+						"11"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Carrinho incluir produto",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDMwNTExNDksImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwMzA0NzU0OX0.8wJb_d3Xt1FNjggxXj31pw_CGOUsRF32aqIsB_9t_dU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": \"1\",\r\n    \"produto_id\": \"6\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/carrinho_incluir",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"carrinho_incluir"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Carrinho - carregar itens",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDM2NTA5OTEsImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwMzY0NzM5MX0.OXpDX5YjePA6SoSPyxHXFXsNJg_g7RAiPPvSXOaX54g",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/carrinho/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"carrinho",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Carrinho Valor Total",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDM2NTUyMzUsImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwMzY1MTYzNX0.2WZAg2TEVNUUAEWZ4QLerYW7SDe9lA2KcKp-Xn9wsMQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/carrinho_valor_total/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"carrinho_valor_total",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Carrinho remover quantidade",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDMwNTExNDksImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwMzA0NzU0OX0.8wJb_d3Xt1FNjggxXj31pw_CGOUsRF32aqIsB_9t_dU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"produto_id\": \"6\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/carrinho_remover_qtd/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"carrinho_remover_qtd",
+						"1"
+					]
+				},
+				"description": "Remove uma produto quantidade de um produto.\r\n\r\nCada quantidade é um registro na tabela de itens, essa requisição vai excluir o primeiro que encontrar. mas vai remover apenas 1."
+			},
+			"response": []
+		},
+		{
+			"name": "Carrinho carregar 1 produto",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDMwNTUwMjcsImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwMzA1MTQyN30.gubz_5gqT3A2RZrYVSNTXr9S25G03lzTiVXdumRX7LE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/carrinho_produto/1/6",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"carrinho_produto",
+						"1",
+						"6"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Carrinho remover item",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDMwNTExNDksImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwMzA0NzU0OX0.8wJb_d3Xt1FNjggxXj31pw_CGOUsRF32aqIsB_9t_dU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"produto_id\": \"6\"\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/carrinho_remover/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"carrinho_remover",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Carrinho finalizar",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDIxMTE3MzQsImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwMjEwODEzNH0.zHXP5_eDmkX5SfbI8KVeMfA-tIImEqCbsw3IhN2u-aA",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/carrinho_finalizar/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"carrinho_finalizar",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pedidos do usuario",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDM2NjE5NTYsImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwMzY1ODM1Nn0.j0c_d0uEIu0qMTiL9I2pmFZbE9cpPglMVm864NL62Mg",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/pedidos/1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"pedidos",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Pedido valor total",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDQ1Mzc2NjYsImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwNDUzNDA2Nn0.5Qlxiif0Z4VOrp-yMGRgSMN8mdF-28CEePXwwKUUOMU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/pedido_valor_total/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"pedido_valor_total",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Itens do pedido",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJleHAiOjE2MDQ1Mzc2NjYsImlzcyI6IjEyNy4wLjAuMSIsImlhdCI6MTYwNDUzNDA2Nn0.5Qlxiif0Z4VOrp-yMGRgSMN8mdF-28CEePXwwKUUOMU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/pedidos_itens/3",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"pedidos_itens",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Logout",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"user_id\": 1\r\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8000/api/logoutAPI",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8000",
+					"path": [
+						"api",
+						"logoutAPI"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
