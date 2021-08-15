@@ -128,13 +128,13 @@ As chamadas estão no git do projeto no arquivo PostMan API Chamadas.json., util
 ## Usuário
 
 ### Criar Usuário
-	#### Rota 
+	Rota: 
 	http://127.0.0.1:8000/api/registrar_usuario
 	
-	#### Método:
+	Método:
 	POST
 	
-	#### Json de envio - Exemplo
+	Json de envio - Exemplo
 	```bash
 	{
 		"name": "postman6",
@@ -144,7 +144,7 @@ As chamadas estão no git do projeto no arquivo PostMan API Chamadas.json., util
 	}	
 	```
 	
-	#### Json de retorno - Exemplo
+	Json de retorno - Exemplo
 	```bash
 	{
 		"status": "true",
