@@ -100,7 +100,11 @@ DB_PASSWORD=
 
 
 ### 6.2 - Migrate
-Antes de rodar, crie o banco: create database apishop;
+Antes de rodar, crie o banco:
+```bash
+create database apishop;
+```
+
 Na pasta do projeto rodar: 
 ```bash
 php artisan migrate
