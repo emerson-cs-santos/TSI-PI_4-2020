@@ -144,11 +144,19 @@ POST
 }	
 ```
 
-#### Json de retorno - Exemplo
+#### Json de retorno Sucesso - Exemplo
 ```bash
 {
 	"status": "true",
 	"id": "58",
+}	
+```	
+
+#### Json de retorno Erro - Exemplo
+```bash
+{
+	"status": "false",
+	"message": "Login incorreto",
 }	
 ```	
 
