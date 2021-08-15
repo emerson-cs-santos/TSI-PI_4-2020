@@ -128,29 +128,29 @@ As chamadas estão no git do projeto no arquivo PostMan API Chamadas.json., util
 ## Usuário
 
 ### Criar Usuário
-	Rota: 
-	http://127.0.0.1:8000/api/registrar_usuario
-	
-	Método:
-	POST
-	
-	Json de envio - Exemplo
-	```bash
-	{
-		"name": "postman6",
-		"email": "postman6@gmail.com",
-		"password": "12345678",
-		"password_confirmar": "12345678"
-	}	
-	```
-	
-	Json de retorno - Exemplo
-	```bash
-	{
-		"status": "true",
-		"id": "58",
-	}	
-	```	
+#### Rota: 
+http://127.0.0.1:8000/api/registrar_usuario
+
+#### Método:
+POST
+
+#### Json de envio - Exemplo
+```bash
+{
+	"name": "postman6",
+	"email": "postman6@gmail.com",
+	"password": "12345678",
+	"password_confirmar": "12345678"
+}	
+```
+
+#### Json de retorno - Exemplo
+```bash
+{
+	"status": "true",
+	"id": "58",
+}	
+```	
 
 ## Home
 
