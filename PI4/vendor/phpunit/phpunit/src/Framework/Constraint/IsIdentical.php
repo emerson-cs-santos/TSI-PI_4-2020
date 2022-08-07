@@ -9,6 +9,7 @@
  */
 namespace PHPUnit\Framework\Constraint;
 
+use const PHP_FLOAT_EPSILON;
 use function abs;
 use function get_class;
 use function is_array;
@@ -22,23 +23,10 @@ use PHPUnit\Framework\ExpectationFailedException;
 use SebastianBergmann\Comparator\ComparisonFailure;
 
 /**
- * Constraint that asserts that one value is identical to another.
- *
- * Identical check is performed with PHP's === operator, the operator is
- * explained in detail at
- * {@url https://php.net/manual/en/types.comparisons.php}.
- * Two values are identical if they have the same value and are of the same
- * type.
- *
- * The expected value is passed in the constructor.
+ * @no-named-arguments Parameter names are not covered by the backward compatibility promise for PHPUnit
  */
 final class IsIdentical extends Constraint
 {
-    /**
-     * @var float
-     */
-    private const EPSILON = 0.0000000001;
-
     /**
      * @var mixed
      */
@@ -59,15 +47,15 @@ final class IsIdentical extends Constraint
      * a boolean value instead: true in case of success, false in case of a
      * failure.
      *
-     * @throws ExpectationFailedException
      * @throws \SebastianBergmann\RecursionContext\InvalidArgumentException
+     * @throws ExpectationFailedException
      */
     public function evaluate($other, string $description = '', bool $returnResult = false): ?bool
     {
         if (is_float($this->value) && is_float($other) &&
             !is_infinite($this->value) && !is_infinite($other) &&
             !is_nan($this->value) && !is_nan($other)) {
-            $success = abs($this->value - $other) < self::EPSILON;
+            $success = abs($this->value - $other) < PHP_FLOAT_EPSILON;
         } else {
             $success = $this->value === $other;
         }
